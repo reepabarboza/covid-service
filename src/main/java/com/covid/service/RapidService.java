@@ -4,6 +4,7 @@ import com.covid.constant.ServiceConstants;
 import com.covid.gateway.RapidApiGateway;
 import com.covid.model.CovidData;
 import com.covid.repository.CovidRepository;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,9 @@ public class RapidService {
 
                     Pageable pageRequest = PageRequest.of(Integer.parseInt(ServiceConstants.DEFAULT_PAGE_NUMBER),
                             Integer.parseInt(ServiceConstants.DEFAULT_PAGE_SIZE));
-                    return Mono.just(covidRepository.findAllByCountry(country, pageRequest));
+
+                    return Mono.just(StringUtils.isNotBlank(country)
+                            ? covidRepository.findAllByCountry(country, pageRequest) : covidRepository.findAll(pageRequest));
                 });
     }
 
