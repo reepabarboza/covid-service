@@ -16,6 +16,9 @@ import reactor.core.publisher.Mono;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+/**
+ * Handler class consists of API to fetch the Covid data.
+ */
 @Named
 public class RequestHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,6 +37,17 @@ public class RequestHandler {
                 .body(Mono.just(ServiceConstants.SUCCESS), String.class);
     }
 
+    /**
+     * This method fetches the Covid data from Rapid API, saves in the H2 datastore and returns Page response
+     * with Covid data elements and the page details.
+     * Its takes optional parameters country, pagenumber and pagesize. If none of the parameters are specified,
+     * the covid data is fetched for the entire world. On specifying the country, pagenumber and pagesize,
+     * the covid data with the number of records specified in parameter pagesize for the specified country is fetched
+     * for the given page number.
+     *
+     * @param request
+     * @return
+     */
     public Mono<ServerResponse> fetchCovidData(ServerRequest request) {
         String country = request.queryParam(ServiceConstants.COUNTRY).orElse(ServiceConstants.EMPTY);
 

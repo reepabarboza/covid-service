@@ -4,6 +4,8 @@ import com.covid.constant.ServiceConstants;
 import com.covid.gateway.RapidApiGateway;
 import com.covid.model.CovidData;
 import com.covid.repository.CovidRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,9 @@ import javax.inject.Inject;
 
 @Service
 public class RapidService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RapidService.class);
+
     private RapidApiGateway rapidApiGateway;
     @Autowired
     private CovidRepository covidRepository;
@@ -25,6 +30,15 @@ public class RapidService {
         this.rapidApiGateway = rapidApiGateway;
     }
 
+
+    /**
+     * This method fetches the Covid data from Rapid API for the given country, saves in the H2 datastore
+     * and returns Page response with Covid data elements and the page details. If country is empty then
+     * covid data for the world is returned
+     *
+     * @param country
+     * @return
+     */
     public Mono<Page<CovidData>> fetchCovidData(final String country) {
         return rapidApiGateway.fetchCovidData(country)
                 .flatMap(response -> {
@@ -38,9 +52,15 @@ public class RapidService {
                 });
     }
 
+    /**
+     * This method fetches the Covid data from H2 database for the given country, pagenumber and pagesize
+     * and returns a Page response.
+     *
+     * @param country
+     * @return
+     */
     public Mono<Page<CovidData>> fetchPagedCovidData(final String country, final Integer pageNumber, final Integer pageSize) {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
-        return rapidApiGateway.fetchCovidData(country)
-                .flatMap(response -> Mono.just(covidRepository.findAllByCountry(country, pageRequest)));
+        return Mono.just(covidRepository.findAllByCountry(country, pageRequest));
     }
 }

@@ -2,7 +2,7 @@ package com.covid.constant;
 
 public class ServiceConstants {
     public static final String ROOT_PATH = "/covid";
-    public static final String HEALTH_CHECK = ROOT_PATH + "/healthCheck";
+    public static final String HEALTH_CHECK = "/healthCheck";
     public static final String FETCH_COVID_DATA_URI = ROOT_PATH + "/fetchCovidData";
 
     public static final String SUCCESS = "Success";
