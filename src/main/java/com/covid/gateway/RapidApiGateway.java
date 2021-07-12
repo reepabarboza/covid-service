@@ -33,6 +33,7 @@ public class RapidApiGateway {
                 .retrieve()
                 .bodyToMono(RapidResponse.class)
                 .flatMap(rapidResponse -> {
+                    LOGGER.info("Data fetched from Rapi API : {}",  rapidResponse.getData());
                     return Mono.just(rapidResponse);
                 })
                 .onErrorResume(error -> {

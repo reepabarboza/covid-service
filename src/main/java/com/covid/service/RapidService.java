@@ -44,6 +44,7 @@ public class RapidService {
         return rapidApiGateway.fetchCovidData(country)
                 .flatMap(response -> {
                     if (response.getData() != null && !CollectionUtils.isEmpty(response.getData().getCovid19Stats())) {
+                        LOGGER.info("Save Covid data : {}",  response.getData().getCovid19Stats());
                         covidRepository.saveAll(response.getData().getCovid19Stats());
                     }
 
@@ -64,6 +65,8 @@ public class RapidService {
      */
     public Mono<Page<CovidData>> fetchPagedCovidData(final String country, final Integer pageNumber, final Integer pageSize) {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
-        return Mono.just(covidRepository.findAllByCountry(country, pageRequest));
+        LOGGER.info("Fetch Covid data for country: {}",  country);
+        return Mono.just(StringUtils.isNotBlank(country)
+                ? covidRepository.findAllByCountry(country, pageRequest) : covidRepository.findAll(pageRequest));
     }
 }

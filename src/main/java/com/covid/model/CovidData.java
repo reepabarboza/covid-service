@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Date;
 
 @Data
 @Entity
@@ -30,6 +29,16 @@ public class CovidData {
     private String deaths;
     @Column
     private String recovered;
-    @Column
-    private Date createdDate;
+
+    @Override
+    public String toString() {
+        return "CovidData{" +
+                ", city='" + city + '\'' +
+                ", province='" + province + '\'' +
+                ", province='" + province + '\'' +
+                ", keyId='" + keyId + '\'' +
+                ", deaths='" + deaths + '\'' +
+                ", recovered='" + recovered + '\'' +
+                '}';
+    }
 }
